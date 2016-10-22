@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
+import sys
 import xbmc
 import xbmcaddon
 import xbmcgui
+
+if sys.version_info >= (2, 7):
+    import json
+else:
+    import simplejson as json
 
 # Import the common settings
 from resources.lib.settings import log
@@ -29,34 +35,46 @@ def getIsTvShow():
 if __name__ == '__main__':
     log("Suitability: Started")
 
-    videoName = None
-    isTvShow = getIsTvShow()
+    json_query = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "Addons.GetAddonDetails", "params": { "addonid": "repository.robwebset", "properties": ["enabled", "broken", "name", "author"]  }, "id": 1}')
+    json_response = json.loads(json_query)
 
-    # First check to see if we have a TV Show of a Movie
-    if isTvShow:
-        videoName = xbmc.getInfoLabel("ListItem.TVShowTitle")
+    displayNotice = True
+    if ("result" in json_response) and ('addon' in json_response['result']):
+        addonItem = json_response['result']['addon']
+        if (addonItem['enabled'] is True) and (addonItem['broken'] is False) and (addonItem['type'] == 'xbmc.addon.repository') and (addonItem['addonid'] == 'repository.robwebset') and (addonItem['author'] == 'robwebset'):
+            displayNotice = False
 
-    # If we do not have the title yet, get the default title
-    if videoName in [None, ""]:
-        videoName = xbmc.getInfoLabel("ListItem.Title")
+            videoName = None
+            isTvShow = getIsTvShow()
 
-    # If there is no video name available prompt for it
-    if videoName in [None, ""]:
-        # Prompt the user for the new name
-        keyboard = xbmc.Keyboard('', ADDON.getLocalizedString(32032), False)
-        keyboard.doModal()
+            # First check to see if we have a TV Show of a Movie
+            if isTvShow:
+                videoName = xbmc.getInfoLabel("ListItem.TVShowTitle")
 
-        if keyboard.isConfirmed():
-            try:
-                videoName = keyboard.getText().decode("utf-8")
-            except:
-                videoName = keyboard.getText()
+            # If we do not have the title yet, get the default title
+            if videoName in [None, ""]:
+                videoName = xbmc.getInfoLabel("ListItem.Title")
 
-    if videoName not in [None, ""]:
-        log("Suitability: Video detected %s" % videoName)
-        SuitabilityCore.runForVideo(videoName, isTvShow)
-    else:
-        log("Suitability: Failed to detect selected video")
-        xbmcgui.Dialog().ok(ADDON.getLocalizedString(32001), ADDON.getLocalizedString(32011))
+            # If there is no video name available prompt for it
+            if videoName in [None, ""]:
+                # Prompt the user for the new name
+                keyboard = xbmc.Keyboard('', ADDON.getLocalizedString(32032), False)
+                keyboard.doModal()
+
+                if keyboard.isConfirmed():
+                    try:
+                        videoName = keyboard.getText().decode("utf-8")
+                    except:
+                        videoName = keyboard.getText()
+
+            if videoName not in [None, ""]:
+                log("Suitability: Video detected %s" % videoName)
+                SuitabilityCore.runForVideo(videoName, isTvShow)
+            else:
+                log("Suitability: Failed to detect selected video")
+                xbmcgui.Dialog().ok(ADDON.getLocalizedString(32001), ADDON.getLocalizedString(32011))
+
+    if displayNotice:
+        xbmc.executebuiltin('Notification("robwebset Repository Required","github.com/robwebset/repository.robwebset",10000,%s)' % ADDON.getAddonInfo('icon'))
 
     log("Suitability: Ended")

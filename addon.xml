@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.suitability" name="Suitability" version="1.2.2" provider-name="robwebset">
+<addon id="script.suitability" name="Suitability" version="100.2.2" provider-name="robwebset">
 	<requires>
 		<import addon="xbmc.python" version="2.20.0"/>
 		<import addon="script.module.beautifulsoup" version="3.2.1"/>
+		<import addon="script.module.simplejson" version="3.3.0"/>
 	</requires>
   	<extension point="xbmc.python.script" library="default.py"/>
 	<extension point="xbmc.service" library="service.py" start="login"/>
@@ -18,7 +19,7 @@
 		<language></language>
 		<platform>all</platform>
 		<license>See LICENSE.txt</license>
-		<forum>http://forum.kodi.tv/showthread.php?tid=292724</forum>
+		<forum></forum>
 		<source>https://github.com/robwebset/script.suitability</source>
 	</extension>
 </addon>

@@ -107,9 +107,19 @@ class Scrapper():
         try:
             plainText = ''.join(ET.fromstring(plainText).itertext())
         except:
-            log("Scrapper: Failed to strip html text with ElementTree, error: %s" % traceback.format_exc())
-            log("Scrapper: Using regex for content handling")
-            plainText = re.sub(r'<[^>]+>', '', plainText)
+            try:
+                plainText = ''.join(ET.fromstring(plainText.decode('utf-8', 'ignore').encode('ascii', 'ignore')).itertext())
+            except:
+                try:
+                    log("Scrapper: Failed to strip html text with ElementTree, error: %s" % traceback.format_exc())
+                    log("Scrapper: Using regex for content handling (with encoding)")
+                    plainText = re.sub(r'<[^>]+>', '', plainText.decode('utf-8', 'ignore').encode('ascii', 'ignore'))
+                except:
+                    try:
+                        log("Scrapper: Unable to process as plain text with regex, try without encoding")
+                        plainText = re.sub(r'<[^>]+>', '', plainText)
+                    except:
+                        log("Scrapper: Failed to process with re-encoding %s" % traceback.format_exc())
 
         # Replace any quotes or other escape characters
         plainText = plainText.replace('&quote;', '"')
@@ -144,36 +154,36 @@ class Scrapper():
 
         parentsAge = fullDetails.get("parentsAge", None)
         if parentsAge not in [None, ""]:
-            displayContent += "[B]Parents Say:[/B] %s\n" % parentsAge
+            displayContent = "%s[B]Parents Say:[/B] %s\n" % (displayContent, parentsAge)
             log("Suitability: parentsAge: %s" % parentsAge)
 
         childsAge = fullDetails.get("childsAge", None)
         if childsAge not in [None, ""]:
-            displayContent += "[B]Children Say:[/B] %s\n" % childsAge
+            displayContent = "%s[B]Children Say:[/B] %s\n" % (displayContent, childsAge)
             log("Suitability: childsAge: %s" % childsAge)
 
         summary = fullDetails.get("summary", None)
         if summary not in [None, ""]:
-            displayContent += "[B]Summary:[/B] %s\n" % summary
+            displayContent = "%s[B]Summary:[/B] %s\n" % (displayContent, summary)
             log("Suitability: Summary: %s" % summary)
 
         overview = fullDetails.get("overview", None)
         if overview not in [None, ""]:
             overview = self._convertHtmlIntoKodiText(overview)
             if len(displayContent) > 0:
-                displayContent += "\n"
-            displayContent += "[B]Overview[/B]\n%s\n" % overview
+                displayContent = "%s\n" % displayContent
+            displayContent = "%s[B]Overview[/B]\n%s\n" % (displayContent, overview)
             log("Suitability: Overview: %s" % overview)
 
         if len(displayContent) > 0:
-            displayContent += "\n"
+            displayContent = "%s\n" % displayContent
 
         log("Suitability: ******************************")
         for detail in fullDetails["details"]:
-            displayContent += "[B]%s - %d/10[/B]\n" % (detail["name"], detail["score"])
+            displayContent = "%s[B]%s - %d/10[/B]\n" % (displayContent, detail["name"], detail["score"])
             log("Suitability: %s - %d/10" % (detail["name"], detail["score"]))
             if detail["description"] not in [None, ""]:
-                displayContent += "%s\n\n" % detail["description"]
+                displayContent = "%s%s\n\n" % (displayContent, detail["description"])
                 log("Suitability: %s" % detail["description"])
             log("Suitability: ******************************")
 

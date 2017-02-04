@@ -151,3 +151,19 @@ msgstr ""
 msgctxt "#32032"
 msgid "Enter Movie / TV Show Title"
 msgstr ""
+
+msgctxt "#32033"
+msgid "Estuary Skin Updated"
+msgstr ""
+
+msgctxt "#32034"
+msgid "This will update your Estuary Skin to include the Suitability features. Continue?"
+msgstr ""
+
+msgctxt "#32035"
+msgid "Unable to update the Estuary skin"
+msgstr ""
+
+msgctxt "#32036"
+msgid "Update Estuary Skin"
+msgstr ""

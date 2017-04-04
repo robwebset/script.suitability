@@ -167,3 +167,7 @@ msgstr ""
 msgctxt "#32036"
 msgid "Update Estuary Skin"
 msgstr ""
+
+msgctxt "#32037"
+msgid "Error Occurred, Please Check Log"
+msgstr ""

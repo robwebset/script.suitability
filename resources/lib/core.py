@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import traceback
 import xbmc
 import xbmcaddon
 import xbmcgui
@@ -29,18 +30,24 @@ class SuitabilityCore():
         selectedViewer = Settings.getDefaultViewer()
 
         while searchSource is not None:
-            xbmc.executebuiltin("ActivateWindow(busydialog)")
             dataScraper = None
-            if searchSource == Settings.KIDS_IN_MIND:
-                dataScraper = KidsInMindScraper(videoName, isTvShow)
-            elif searchSource == Settings.DOVE_FOUNDATION:
-                dataScraper = DoveFoundationScraper(videoName, isTvShow)
-            elif searchSource == Settings.MOVIE_GUIDE_ORG:
-                dataScraper = MovieGuideOrgScraper(videoName, isTvShow)
-            else:
-                dataScraper = CommonSenseMediaScraper(videoName, isTvShow)
+            searchMatches = []
+            xbmc.executebuiltin("ActivateWindow(busydialog)")
+            try:
+                if searchSource == Settings.KIDS_IN_MIND:
+                    dataScraper = KidsInMindScraper(videoName, isTvShow)
+                elif searchSource == Settings.DOVE_FOUNDATION:
+                    dataScraper = DoveFoundationScraper(videoName, isTvShow)
+                elif searchSource == Settings.MOVIE_GUIDE_ORG:
+                    dataScraper = MovieGuideOrgScraper(videoName, isTvShow)
+                else:
+                    dataScraper = CommonSenseMediaScraper(videoName, isTvShow)
 
-            searchMatches = dataScraper.getSelection()
+                searchMatches = dataScraper.getSelection()
+            except:
+                log("runForVideo: Failed to run scraper: %s" % traceback.format_exc(), xbmc.LOGERROR)
+                xbmc.executebuiltin('Notification(%s,%s,3000,%s)' % (ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32037).encode('utf-8'), ADDON.getAddonInfo('icon')))
+
             xbmc.executebuiltin("Dialog.Close(busydialog)")
             selectedItem = None
 
@@ -89,20 +96,27 @@ class SuitabilityCore():
                 log("Suitability: No matching movie found")
             else:
                 xbmc.executebuiltin("ActivateWindow(busydialog)")
-                # Now get the details of the single film
-                displayTitle = "%s: %s" % (ADDON.getLocalizedString(searchSource), selectedItem["name"])
-                log("Suitability: Found film with name: %s" % selectedItem["name"])
+                try:
+                    # Now get the details of the single film
+                    displayTitle = "%s: %s" % (ADDON.getLocalizedString(searchSource), selectedItem["name"])
+                    log("Suitability: Found film with name: %s" % selectedItem["name"])
 
-                details = dataScraper.getSuitabilityData(selectedItem["link"])
+                    details = dataScraper.getSuitabilityData(selectedItem["link"])
 
-                displayContent = dataScraper.getTextView(details)
+                    if details not in [None, ""]:
+                        displayContent = dataScraper.getTextView(details)
+                except:
+                    log("runForVideo: Failed to run scraper: %s" % traceback.format_exc(), xbmc.LOGERROR)
+                    xbmc.executebuiltin('Notification(%s,%s,3000,%s)' % (ADDON.getLocalizedString(32001).encode('utf-8'), ADDON.getLocalizedString(32037).encode('utf-8'), ADDON.getAddonInfo('icon')))
+
                 xbmc.executebuiltin("Dialog.Close(busydialog)")
 
                 # Clear the search source as that will be used to decide if we close the window or
                 # loop again
                 searchSource = None
 
-            del dataScraper
+            if dataScraper not in [None, ""]:
+                del dataScraper
 
             if displayContent not in [None, ""]:
                 # Allow TvTunes to continue playing

@@ -199,6 +199,8 @@ class KidsInMindScraper(Scrapper):
         search_url = "http://www.kids-in-mind.com/cgi-bin/search/search.pl?q=%s"
         url = search_url % urllib.quote_plus(self.videoTitle)
         html = self._getHtmlSource(url)
+        if html in [None, ""]:
+            return []
 
         soup = BeautifulSoup(''.join(html))
 
@@ -224,6 +226,9 @@ class KidsInMindScraper(Scrapper):
 
     def getSuitabilityData(self, videoUrl):
         html = self._getHtmlSource(videoUrl)
+        if html in [None, ""]:
+            return None
+
         soup = BeautifulSoup(''.join(html))
 
         ratings = soup.findAll('span', {"style": "border-bottom:1px dotted #3C3C3C; color:#3C3C3C; text-decoration:none; font-weight: bold"})
@@ -275,6 +280,8 @@ class CommonSenseMediaScraper(Scrapper):
         search_url = "https://www.commonsensemedia.org/search/%s?f[0]=field_reference_review_ent_prod%%253Atype%%3Acsm_" + typeFilter
         url = search_url % urllib.quote_plus(self.videoTitle)
         html = self._getHtmlSource(url)
+        if html in [None, ""]:
+            return []
 
         soup = BeautifulSoup(''.join(html))
 
@@ -300,6 +307,9 @@ class CommonSenseMediaScraper(Scrapper):
 
     def getSuitabilityData(self, videoUrl):
         html = self._getHtmlSource(videoUrl)
+        if html in [None, ""]:
+            return None
+
         soup = BeautifulSoup(''.join(html))
 
         sections = ["message", "role_model", "violence", "sex", "language", "consumerism", "drugs"]
@@ -381,6 +391,8 @@ class DoveFoundationScraper(Scrapper):
         search_url = "https://www.dove.org/?s=%s"
         url = search_url % urllib.quote_plus(self.videoTitle)
         html = self._getHtmlSource(url)
+        if html in [None, ""]:
+            return []
 
         soup = BeautifulSoup(''.join(html))
 
@@ -406,6 +418,9 @@ class DoveFoundationScraper(Scrapper):
 
     def getSuitabilityData(self, videoUrl):
         html = self._getHtmlSource(videoUrl)
+        if html in [None, ""]:
+            return None
+
         soup = BeautifulSoup(''.join(html))
 
         ratingChart = soup.find('div', {"class": "rating-chart"})
@@ -479,6 +494,8 @@ class MovieGuideOrgScraper(Scrapper):
         search_url = "https://www.movieguide.org/?s=%s"
         url = search_url % urllib.quote_plus(self.videoTitle)
         html = self._getHtmlSource(url)
+        if html in [None, ""]:
+            return []
 
         soup = BeautifulSoup(''.join(html))
 
@@ -508,6 +525,9 @@ class MovieGuideOrgScraper(Scrapper):
 
     def getSuitabilityData(self, videoUrl):
         html = self._getHtmlSource(videoUrl)
+        if html in [None, ""]:
+            return None
+
         soup = BeautifulSoup(''.join(html))
 
         ratingTable = soup.find('table', {"class": "content-qual-tbl"})

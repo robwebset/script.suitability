@@ -1,3 +1,8 @@
+v100.4.0 (2017-09-03)
+- Fix some movies not being detected in Common Sense Media (Site update)
+- Align with new site format for movieguide.org
+- Fixed some apostrophe display issues
+
 v100.3.3 (2017-04-01)
 - Fix possible script error leaving busy dialog
 

@@ -57,6 +57,12 @@ class Scrapper():
             log("Scrapper: ERROR opening page %s" % url, xbmc.LOGERROR)
             log("Scrapper: %s" % traceback.format_exc(), xbmc.LOGERROR)
             return None
+
+        try:
+            log("Scrapper: Retrieved page: %s" % doc)
+        except:
+            pass
+
         return doc
 
     def _narrowDownSearch(self, searchMatches):
@@ -125,6 +131,7 @@ class Scrapper():
         plainText = plainText.replace('&quote;', '"')
         plainText = plainText.replace('&nbsp;', ' ')
         plainText = plainText.replace('&#039;', "'")
+        plainText = plainText.replace('&#8217;', "'")
         plainText = plainText.replace('&amp;', '&')
 
         # Need to remove double tags as they are not handled very well when
@@ -350,6 +357,9 @@ class CommonSenseMediaScraper(Scrapper):
 
         description = sectionName.parent.find('div', {"class": "field field-name-field-content-grid-rating-text field-type-text-long field-label-hidden"})
 
+        if description in ['', None]:
+            description = sectionName.parent.find('div', {"class": "field field-name-field-content-grid-rating-text field-type-text-long field-label-hidden"})
+
         scoreSection = sectionName.parent.find('div', {"class": "field field-name-field-content-grid-rating field-type-list-integer field-label-hidden"})
 
         # Our scores should all be 10 based, not 5 based like the web site
@@ -365,7 +375,18 @@ class CommonSenseMediaScraper(Scrapper):
         if "content-grid-5" in str(scoreSection):
             score = 10
 
-        return {"name": sectionName.getText().replace("&amp;", "&"), "score": score, "description": description.getText()}
+        name = ''
+        if sectionName not in ['', None]:
+            if sectionName.getText() not in ['', None]:
+                # Trim "Positive role models & representations"
+                name = sectionName.getText().replace('&amp; representations', '').replace("&amp;", "&")
+
+        descriptionDisplay = ''
+        if description not in ['', None]:
+            if description.getText() not in ['', None]:
+                descriptionDisplay = description.getText().replace("&amp;", "&")
+
+        return {"name": name, "score": score, "description": descriptionDisplay}
 
     # Gets the target age data from the HTML
     def _getAge(self, soup, ageView):
@@ -375,9 +396,11 @@ class CommonSenseMediaScraper(Scrapper):
         age = ""
         ageSection = soup.find('div', {"class": classValue})
         if ageSection is not None:
-            ageSection = ageSection.find('div', {"class": "csm-green-age"})
-            if ageSection is not None:
-                age = ageSection.getText()
+            ageSectionItem = ageSection.find('div', {"class": "csm-green-age"})
+            if ageSectionItem in [None, '']:
+                ageSectionItem = ageSection.find('div', {"class": "stat-wrapper age"})
+            if ageSectionItem is not None:
+                age = ageSectionItem.getText()
 
         return age
 
@@ -531,6 +554,8 @@ class MovieGuideOrgScraper(Scrapper):
         soup = BeautifulSoup(''.join(html))
 
         ratingTable = soup.find('table', {"class": "content-qual-tbl"})
+        if ratingTable in [None, '']:
+            ratingTable = soup.find('table', {"class": "movieguide_content_summary"})
 
         details = []
 
@@ -541,6 +566,9 @@ class MovieGuideOrgScraper(Scrapper):
             for row in tableRows:
                 # Get the title of the row
                 ratingTitle = row.find('td', {"class": "param-cell"})
+                if ratingTitle in [None, ""]:
+                    ratingTitle = row.find('td')
+
                 if ratingTitle not in [None, ""]:
                     # Now we have the section title work out what the rating is
                     dtEntries = row.findAll('td')
@@ -549,12 +577,12 @@ class MovieGuideOrgScraper(Scrapper):
                     for entry in dtEntries:
                         if entry != ratingTitle:
                             # Check for the case where there is none
-                            if "circle-green" in str(entry):
+                            if ("circle-green" in str(entry)) or ("movieguide_circle_green" in str(entry)):
                                 rating = ratingCount
                                 break
                             ratingCount = ratingCount + 1
                             # Bad entries are marked with red
-                            if "circle-red" in str(entry):
+                            if ("circle-red" in str(entry)) or ("movieguide_circle_red" in str(entry)):
                                 rating = ratingCount
                                 break
                     # convert the ratings into an out-of-10 score
@@ -582,9 +610,16 @@ class MovieGuideOrgScraper(Scrapper):
                     if summarySection.get('title', None) not in [None, ""]:
                         fullDetails["summary"] = "%s - %s " % (fullDetails["summary"], summarySection['title'])
                         log("MovieGuideOrgScraper: Summary details = %s" % fullDetails["summary"])
+        else:
+            summarySection = soup.find('div', {"class": "movieguide_review_section movieguide_review_summary"})
+            if summarySection is not None:
+                fullDetails["summary"] = summarySection.getText().strip()
 
         # Now get the text description
         contentBreakdown = soup.find('div', {"class": "content_content"})
+
+        if contentBreakdown in [None, ""]:
+            contentBreakdown = soup.find('div', {"class": "movieguide_review_section movieguide_review_content"})
 
         if contentBreakdown is not None:
             content = contentBreakdown.string

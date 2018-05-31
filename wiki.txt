@@ -1,0 +1,72 @@
+[[https://github.com/robwebset/script.suitability/raw/master/icon.png]]
+
+== Introduction ==
+You can install this addon from: [https://www.urepo.org URepo Repository]
+<br />
+<br />
+The Suitability addon allows you to get an "overview" of the content of a movie, things like the sex/violence/language content, so you can make a judgement as to the suitability for your children. (Or your grandmother!)
+
+The addon uses the following sites to retrieve information:
+* [http://www.kids-in-mind.com Kids-In-Mind]
+* [http://www.commonsensemedia.org Common Sense Media]
+* [http://www.dove.org The Dove Foundation]
+* [http://www.movieguide.org Movie Guide]
+
+Suitability allows you to view a summary star rating of the movie content and then drill down to view the detailed text description of the movies content. It is available via the movie context menu or launched from the Kodi Programs section (where you will be prompted for a movie name to search for) or there is also an option in settings to add it to the Confluence Movie Information Dialog.
+<br />
+== Summary Display ==
+The summary screen shows a star rating, the categories for each provider will differ as each source site is slightly different.
+<br />
+<center>[[https://github.com/robwebset/repository.robwebset/raw/master/script.suitability/images/Suitability-Summary1.JPG|300px]]</center>
+<br />
+The details button will show a text description of the films content, while the right hand button will allow you to toggle through all the available providers.
+<br />
+== Details Display ==
+The details screen will describe the content of the film to give you a better understanding of the rating available via the summary screen.
+<br />
+[[https://github.com/robwebset/repository.robwebset/raw/master/script.suitability/images/Suitability-Details1.JPG|600px]]
+<br />
+The summary button will switch to the summary view for the given provider, while the right hand button will allow you to toggle through all the available providers.
+<br />
+== Settings ==
+This section details all the settings options for Suitability
+=== Suitability ===
+{| border="0"
+|- valign=top
+|
+:'''Default Source'''
+::The first site to display the movie ratings from
+:'''Default View'''
+::If the initial screen to display is the summary or the detailed view
+:'''Show Suitability On Context Menu (Restart Required)'''
+::If a link to Suitability should be added to the Movie context menu
+:<u>'''''Debugging'''''</u>
+::
+:'''Enable Debug logging'''
+::Enables Suitability debug logging into the Kodi log file
+:<u>'''''Operations'''''</u>
+::
+:'''Update Confluence Skin'''
+::Adds a Suitability button to the Movie Information dialog in confluence.
+|}
+
+=== Providers ===
+{| border="0"
+|- valign=top
+|
+:'''Common Sense Media'''
+::Enable, disable and set the order for the supplier to be used
+:'''Kids In Mind'''
+::Enable, disable and set the order for the supplier to be used
+:'''Dove Foundation'''
+::Enable, disable and set the order for the supplier to be used
+:'''Movie Guide (.org)'''
+::Enable, disable and set the order for the supplier to be used
+|}
+
+== Debugging ==
+If reporting a problem, please also provide a debug log. To do this you need to enable BOTH:
+* Kodi logging from the main setting menu
+* Suitability debug from the Suitability addon settings menu
+Please do not paste the log into the forum thread, just link to it.
+<br />

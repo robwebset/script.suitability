@@ -1,3 +1,8 @@
+__NOTICE__
+
+__This addon is no longer maintained by me, if you are interested in taking it over then please contact me via the Issues section. (You are welcome to submit it to the official Kodi Repo - just make sure you remove my name from it before you do it)__
+
+
 ![Suitability](icon.png)
 
 The Suitability addon allows you to get an "overview" of the content of a movie, things like the sex/violence/language content, so you can make a judgement as to the suitability for your children. (Or your grandmother!)
@@ -13,15 +18,3 @@ Suitability allows you to view a summary star rating of the movie content and th
 For more information you can have a look at the wiki entry:
 
 [Add-on:Suitability](https://github.com/robwebset/script.suitability/wiki)
-
-You can install this addon from: [Repository:URepo](http://www.urepo.org/)
-
-For latest developer version: [Repository:robwebset](https://github.com/robwebset/repository.robwebset/blob/master/repos/repository.robwebset/repository.robwebset-1.0.0.zip) ([wiki](https://github.com/robwebset/repository.robwebset/wiki))
-
-To ask questions or comment about Suitability, please use the forum at [URepo.org](http://www.urepo.org/forum/viewtopic.php?t=1759)
-
-__Donations__
-
-If you have found Suitability useful and would like to help support future development and bug fixes, then please feel free to make a small donation.
-
-[![Donation](https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TYBDQB5EEEPZ8)

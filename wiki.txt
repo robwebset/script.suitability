@@ -1,9 +1,6 @@
 [[https://github.com/robwebset/script.suitability/raw/master/icon.png]]
 
 == Introduction ==
-You can install this addon from: [https://www.urepo.org URepo Repository]
-<br />
-<br />
 The Suitability addon allows you to get an "overview" of the content of a movie, things like the sex/violence/language content, so you can make a judgement as to the suitability for your children. (Or your grandmother!)
 
 The addon uses the following sites to retrieve information:
